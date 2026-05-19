@@ -26,33 +26,63 @@ def find_browser():
     if _BROWSER is not None:
         return _BROWSER
 
-    # Ordered by preference: Chromium-based browsers with headless support
-    candidates = [
-        # Linux
-        ["chromium-browser"],
-        ["google-chrome"],
-        ["google-chrome-stable"],
-        ["chromium"],
-        # macOS
-        ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"],
-        ["/Applications/Chromium.app/Contents/MacOS/Chromium"],
-        # Windows (common install paths)
-        ["chrome"],                         # if in PATH
-        ["msedge"],                         # Microsoft Edge
-        [r"C:\Program Files\Google\Chrome\Application\chrome.exe"],
-        [r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"],
-        [r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"],
-        [r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"],
-        [os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe")],
-        [os.path.expandvars(r"%PROGRAMFILES%\Google\Chrome\Application\chrome.exe")],
-        [os.path.expandvars(r"%PROGRAMFILES(X86)%\Google\Chrome\Application\chrome.exe")],
-    ]
+    candidates = []
+
+    if sys.platform == "win32":
+        # Windows: use registry + absolute paths (PATH aliases are unreliable)
+        import winreg
+        search_paths = []
+
+        # Try Chrome via registry
+        for reg_path in [
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe"),
+            (winreg.HKEY_CURRENT_USER,  r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe"),
+        ]:
+            try:
+                with winreg.OpenKey(reg_path[0], reg_path[1]) as key:
+                    path, _ = winreg.QueryValueEx(key, "")
+                    if os.path.exists(path):
+                        candidates.append([path])
+            except OSError:
+                pass
+
+        # Try Edge via registry
+        for reg_path in [
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe"),
+        ]:
+            try:
+                with winreg.OpenKey(reg_path[0], reg_path[1]) as key:
+                    path, _ = winreg.QueryValueEx(key, "")
+                    if os.path.exists(path):
+                        candidates.append([path])
+            except OSError:
+                pass
+
+        # Fallback: common install paths
+        for p in [
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+            r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        ]:
+            if os.path.exists(p) and [p] not in candidates:
+                candidates.append([p])
+
+    else:
+        # Linux / macOS
+        candidates = [
+            ["chromium-browser"],
+            ["google-chrome"],
+            ["google-chrome-stable"],
+            ["chromium"],
+            ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"],
+            ["/Applications/Chromium.app/Contents/MacOS/Chromium"],
+        ]
 
     for cmd in candidates:
         exe = cmd[0]
-        # On non-Windows, %VAR% paths won't resolve; skip if they contain %
-        if "%" in exe:
-            continue
         if shutil.which(exe) or os.path.exists(exe):
             _BROWSER = (exe, ["--headless", "--disable-gpu", "--no-sandbox"])
             return _BROWSER
