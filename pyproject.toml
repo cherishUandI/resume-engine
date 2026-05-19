@@ -30,8 +30,8 @@ resume = "resume_engine.cli:main"
 resume-pipeline = "resume_engine.pipeline:main"
 
 [project.urls]
-Homepage = "https://github.com/xingpidong/resume-engine"
-Repository = "https://github.com/xingpidong/resume-engine"
+Homepage = "https://github.com/cherishUandI/resume-engine"
+Repository = "https://github.com/cherishUandI/resume-engine"
 
 [tool.setuptools.packages.find]
 where = ["src"]
