@@ -1,0 +1,31 @@
+/* ── Photo Slot ── */
+.hero-photo {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.25);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  flex-shrink: 0;
+  margin-right: 14px;
+  background: rgba(255,255,255,0.1);
+}
+
+.hero-photo.no-photo {
+  display: none;
+}
+
+.hero-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.hero-left .hero-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Square variant for corporate style */
+.hero-photo.square {
+  border-radius: 4px;
+}

@@ -1,0 +1,34 @@
+{
+  "breathing": {
+    "name": "呼吸 40%",
+    "body_size": "8.5pt",
+    "line_height": "1.8",
+    "padding": "24px",
+    "gap": "20px",
+    "exp_margin": "20px"
+  },
+  "standard": {
+    "name": "标准 35%",
+    "body_size": "9pt",
+    "line_height": "1.65",
+    "padding": "16px",
+    "gap": "14px",
+    "exp_margin": "16px"
+  },
+  "compact": {
+    "name": "密集 28%",
+    "body_size": "8pt",
+    "line_height": "1.45",
+    "padding": "12px",
+    "gap": "10px",
+    "exp_margin": "12px"
+  },
+  "minimal": {
+    "name": "最小 20%",
+    "body_size": "7.5pt",
+    "line_height": "1.3",
+    "padding": "8px",
+    "gap": "8px",
+    "exp_margin": "10px"
+  }
+}

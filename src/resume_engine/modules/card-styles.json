@@ -1,0 +1,20 @@
+{
+  "sharp": {
+    "exp_clip": "polygon(10px 0, 100% 0, calc(100% - 4px) 100%, 0 100%, 0 14px)",
+    "proj_clip": "polygon(4px 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%, 0 14px)",
+    "exp_before_top": "16px",
+    "name": "锐利切角"
+  },
+  "soft": {
+    "exp_clip": "polygon(6px 0, 100% 0, calc(100% - 3px) 100%, 0 100%, 0 10px)",
+    "proj_clip": "polygon(3px 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%, 0 10px)",
+    "exp_before_top": "12px",
+    "name": "柔和切角"
+  },
+  "curve": {
+    "exp_clip": "polygon(8px 0, 100% 0, calc(100% - 3px) 100%, 0 100%, 0 12px)",
+    "proj_clip": "polygon(3px 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%, 0 12px)",
+    "exp_before_top": "14px",
+    "name": "均衡切角"
+  }
+}

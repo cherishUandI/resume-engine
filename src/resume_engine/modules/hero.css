@@ -1,0 +1,64 @@
+.hero {
+    background: linear-gradient(160deg, #1a1f25 0%, #232a33 50%, #1a1f25 100%);
+    padding: @@HERO_PAD@@;
+    position: relative;
+    clip-path: @@HERO_CLIP@@;
+    margin-bottom: -5px;
+    z-index: 3;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #c4a46c, #d4b87a 25%, #c4a46c 50%, #8b7355 75%, #c4a46c);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute; bottom: 20px; right: 40px;
+    width: 60px; height: 60px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transform: rotate(30deg);
+  }
+
+  .hero-inner {
+    padding: 0 20mm 0 20mm;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
+  }
+
+  .hero-left { flex: 1; display: flex; align-items: center; }
+  .hero-left .hero-text-block { display: flex; flex-direction: column; }
+  .hero-right { display: flex; gap: 24px; padding-bottom: 2px; }
+
+  .hero-name {
+    font-family: 'Georgia', 'Noto Serif SC', 'SimSun', serif;
+    font-size: 34pt; font-weight: 700; color: #f2ede4;
+    letter-spacing: 0.08em; line-height: 1; margin-bottom: 6px;
+    display: inline-block; position: relative;
+  }
+
+  .hero-name::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 40px; height: 2px; background: #c4a46c;
+  }
+
+  .hero-title {
+    font-size: 9.5pt; font-weight: 300; color: #b0a080;
+    letter-spacing: 0.06em; margin-top: 8px;
+  }
+
+  .hero-metric { text-align: center; min-width: 52px; position: relative; }
+  .hero-metric::before {
+    content: ''; position: absolute; top: -6px; left: 50%;
+    width: 4px; height: 4px; background: #c4a46c;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .hero-metric .val {
+    font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+    font-size: 20pt; font-weight: 700; color: #f2ede4;
+    line-height: 1; margin-bottom: 4px;
+  }
+
+  .hero-metric .val span { font-size: 9pt; font-weight: 400; color: #b0a080; }
+  .hero-metric .lbl { font-size: 6.5pt; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.12em; line-height: 1.3; }

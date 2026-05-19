@@ -1,0 +1,14 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #dcd8cf;
+    display: flex; justify-content: center; padding: 40px 0;
+    font-family: -apple-system, 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 210mm; min-height: 297mm; background: #faf9f6;
+    box-shadow: 0 0 0 0.5px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+    position: relative; overflow: hidden;
+  }

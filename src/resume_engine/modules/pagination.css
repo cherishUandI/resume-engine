@@ -1,0 +1,46 @@
+/* ── Smart Pagination ── */
+/* A4 print page setup */
+@page {
+  size: A4;
+  margin: 0;
+}
+@page :first {
+  @bottom-center { content: none; }
+}
+@page {
+  @bottom-center {
+    content: "— " counter(page) " —";
+    font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+    font-size: 7pt;
+    color: #bbb;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ── Break rules ── */
+/* Keep section headers glued to first content card */
+.sec-header {
+  page-break-after: avoid;
+}
+/* Never orphan a card's last line */
+.exp-card {
+  page-break-inside: avoid;
+}
+.side-card {
+  page-break-inside: avoid;
+}
+/* Education cards stay together */
+.edu-card {
+  page-break-inside: avoid;
+}
+
+/* Allow natural break between major blocks */
+.main-col {
+  orphans: 2;
+  widows: 2;
+}
+
+/* Footer only on last page via JS-driven class; CSS fallback: show on all */
+.footer-bar {
+  page-break-before: avoid;
+}

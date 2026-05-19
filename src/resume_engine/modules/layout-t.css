@@ -1,0 +1,10 @@
+.content { padding: 24px 20mm 14px 20mm; position: relative; z-index: 1; }
+  .cols { display: flex; gap: 0; position: relative; }
+
+  .main-col { flex: 60; min-width: 0; padding-right: 24px; position: relative; }
+  .main-col::after {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 0.5px;
+    background: linear-gradient(180deg, transparent 0%, #d4cec0 15%, #d4cec0 85%, transparent 100%);
+  }
+
+  .side-col { flex: 40; min-width: 0; padding-left: 24px; }

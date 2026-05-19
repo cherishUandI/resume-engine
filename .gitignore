@@ -1,0 +1,32 @@
+# Build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Generated output
+output/
+*.pdf
+*.png
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Virtual env
+venv/
+.venv/
+
+# Cache
+.cache/
+
+# Real user data (keep private)
+user_zh_real.json
+user_en_real.json
+*.secret

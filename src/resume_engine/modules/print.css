@@ -1,0 +1,4 @@
+@media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; }
+  }

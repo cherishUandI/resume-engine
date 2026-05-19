@@ -1,0 +1,83 @@
+{
+  "name": "John Doe",
+  "title": "Senior Software Engineer · 8 Years",
+  "email": "john@example.com",
+  "phone": "+1-555-000-0000",
+  "city": "San Francisco, CA",
+  "metrics": [
+    ["8", "Years Exp"],
+    ["5M", "Peak Users"],
+    ["20+", "Projects"],
+    ["AWS", "Certified"]
+  ],
+  "skills": [
+    "Python", "Go", "TypeScript", "React", "Node.js",
+    "PostgreSQL", "Redis", "Docker", "Kubernetes",
+    "Microservices", "Performance", "System Design", "CI/CD"
+  ],
+  "experience": [
+    {
+      "company": "Tech Corp Inc.",
+      "role": "Staff Backend Engineer",
+      "date": "2023.06 — Present",
+      "summary": "Core system architecture design and performance optimization, handling 100M+ daily requests",
+      "bullets": [
+        "Led microservices migration, splitting monolith into 12 services, 300% deployment efficiency gain",
+        "Designed distributed caching strategy, reducing API latency from 200ms to 35ms",
+        "Built full-stack observability pipeline, MTTR reduced from 30min to 30s"
+      ],
+      "dark": false
+    },
+    {
+      "company": "FinTech Solutions",
+      "role": "Backend Developer",
+      "date": "2020.03 — 2023.05",
+      "summary": "Payment clearing system handling $1B+ daily transaction volume",
+      "bullets": [
+        "Developed payment gateway integrating 20+ banking APIs, 99.99% success rate",
+        "Designed idempotency scheme eliminating duplicate charges, zero incidents",
+        "Optimized reconciliation from 4 hours to 15 minutes"
+      ],
+      "dark": true
+    },
+    {
+      "company": "E-Commerce Platform",
+      "role": "Java Developer",
+      "date": "2018.07 — 2020.02",
+      "summary": "E-commerce middle-platform development supporting 10M+ concurrent users during sales",
+      "bullets": [
+        "Built flash sale system with Redis + message queue traffic shaping",
+        "Managed product catalog scaling to 10M+ SKUs"
+      ],
+      "dark": false
+    }
+  ],
+  "projects": [
+    {
+      "name": "Distributed Task Scheduler",
+      "role": "Tech Lead",
+      "date": "2023 — Present",
+      "summary": "In-house distributed job scheduler supporting Cron/Delay/DAG workflows, 500K+ daily executions",
+      "bullets": [
+        "Built with Go, 10,000+ TPS per node",
+        "Supports sharding, broadcast, and MapReduce execution strategies"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "University of Technology",
+      "degree": "B.S. Computer Science",
+      "date": "2012 — 2016"
+    }
+  ],
+  "languages": [
+    ["English", "Native"],
+    ["Chinese", "Fluent"]
+  ],
+  "certs": [
+    "AWS Solutions Architect Professional",
+    "Kubernetes CKAD"
+  ],
+  "lang": "en"
+}
