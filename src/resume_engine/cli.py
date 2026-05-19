@@ -7,12 +7,58 @@ Usage:
   python3 generate.py --data user.json --theme slate-steel --font mono --deco bar --pdf
 """
 
-import argparse, json, os, re, subprocess, sys, time
+import argparse, json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
 from datetime import datetime
 
 MODULES = Path(__file__).parent / "modules"
 OUTPUT = Path(__file__).parent / "output"
+
+# ═══════════════════════════════════════════════════════════════
+# BROWSER DETECTION (cross-platform)
+# ═══════════════════════════════════════════════════════════════
+
+_BROWSER = None  # cached result
+
+def find_browser():
+    """Find an available headless browser. Returns (executable, args_prefix) or (None, None)."""
+    global _BROWSER
+    if _BROWSER is not None:
+        return _BROWSER
+
+    # Ordered by preference: Chromium-based browsers with headless support
+    candidates = [
+        # Linux
+        ["chromium-browser"],
+        ["google-chrome"],
+        ["google-chrome-stable"],
+        ["chromium"],
+        # macOS
+        ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"],
+        ["/Applications/Chromium.app/Contents/MacOS/Chromium"],
+        # Windows (common install paths)
+        ["chrome"],                         # if in PATH
+        ["msedge"],                         # Microsoft Edge
+        [r"C:\Program Files\Google\Chrome\Application\chrome.exe"],
+        [r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"],
+        [r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"],
+        [r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"],
+        [os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe")],
+        [os.path.expandvars(r"%PROGRAMFILES%\Google\Chrome\Application\chrome.exe")],
+        [os.path.expandvars(r"%PROGRAMFILES(X86)%\Google\Chrome\Application\chrome.exe")],
+    ]
+
+    for cmd in candidates:
+        exe = cmd[0]
+        # On non-Windows, %VAR% paths won't resolve; skip if they contain %
+        if "%" in exe:
+            continue
+        if shutil.which(exe) or os.path.exists(exe):
+            _BROWSER = (exe, ["--headless", "--disable-gpu", "--no-sandbox"])
+            return _BROWSER
+
+    _BROWSER = (None, None)
+    return _BROWSER
 CACHE = Path.home() / ".cache" / "resume-engine"
 
 # ═══════════════════════════════════════════════════════════════
@@ -515,10 +561,13 @@ def generate(args):
         sys.exit(1)
 
     if args.preview or args.pdf:
-        # 4a. Start HTTP server
+        # 4a. Detect browser
+        browser_exe, browser_args = find_browser()
+
+        # 4b. Start HTTP server
         print("[2/4] Starting HTTP server...")
         server = subprocess.Popen(
-            ["python3", "-m", "http.server", "8790"],
+            [sys.executable, "-m", "http.server", "8790"],
             cwd=str(OUTPUT),
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -535,7 +584,7 @@ def generate(args):
             print("  Retrying server on 8791...")
             server.kill()
             server = subprocess.Popen(
-                ["python3", "-m", "http.server", "8791"],
+                [sys.executable, "-m", "http.server", "8791"],
                 cwd=str(OUTPUT),
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
@@ -545,27 +594,43 @@ def generate(args):
         else:
             port = 8790
 
-        # 4b. Screenshot
-        ss_path = CACHE / "screenshots" / f"{slug}.png"
-        print(f"[3/4] Screenshot → {slug}.png")
-        subprocess.run([
-            "chromium-browser", "--headless", "--disable-gpu",
-            f"--screenshot={ss_path}",
-            "--window-size=794,1123", "--no-sandbox",
-            f"http://localhost:{port}/{slug}.html",
-        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
-
+        ss_path = None
         pdf_path = None
-        if args.pdf:
-            # 4c. PDF
-            pdf_path = CACHE / "documents" / f"{user['name']}简历-{theme_key}-{font_key}-{deco_key}-{timestamp}.pdf"
-            print(f"[4/4] PDF → {os.path.basename(pdf_path)}")
-            subprocess.run([
-                "chromium-browser", "--headless", "--disable-gpu",
-                f"--print-to-pdf={pdf_path}",
-                "--no-sandbox",
-                f"http://localhost:{port}/{slug}.html",
-            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+
+        if browser_exe:
+            # 4c. Screenshot
+            ss_path = CACHE / "screenshots" / f"{slug}.png"
+            print(f"[3/4] Screenshot → {slug}.png")
+            subprocess.run(
+                [browser_exe] + browser_args +
+                [f"--screenshot={ss_path}",
+                 "--window-size=794,1123",
+                 f"http://localhost:{port}/{slug}.html"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30
+            )
+
+            if args.pdf:
+                # 4d. PDF
+                pdf_path = CACHE / "documents" / f"{user['name']}-{theme_key}-{font_key}-{deco_key}-{timestamp}.pdf"
+                print(f"[4/4] PDF → {pdf_path.name}")
+                subprocess.run(
+                    [browser_exe] + browser_args +
+                    [f"--print-to-pdf={pdf_path}",
+                     f"http://localhost:{port}/{slug}.html"],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30
+                )
+        else:
+            print("[3/4] ⚠ No headless browser found. Skipping screenshot/PDF.")
+            print("  Install Chrome or Edge, or install weasyprint: pip install weasyprint")
+            if args.pdf:
+                # Try weasyprint as fallback for PDF
+                try:
+                    from weasyprint import HTML
+                    pdf_path = CACHE / "documents" / f"{user['name']}-{theme_key}-{font_key}-{deco_key}-{timestamp}.pdf"
+                    print(f"[4/4] PDF via weasyprint → {pdf_path.name}")
+                    HTML(filename=str(html_path)).write_pdf(str(pdf_path))
+                except ImportError:
+                    print("[4/4] ⚠ weasyprint not available. PDF skipped.")
 
         # Kill server
         server.kill()
